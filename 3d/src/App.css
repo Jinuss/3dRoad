@@ -4,7 +4,10 @@
   padding: 2rem;
   text-align: center;
 }
-
+#container {
+  width: 100%;
+  height: max-content;
+}
 .logo {
   height: 6em;
   padding: 1.5em;
