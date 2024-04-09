@@ -28,7 +28,7 @@ function App() {
     const camera = new THREE.PerspectiveCamera(
       45,
       window.innerWidth / window.innerHeight,
-      5,
+      0.1,
       1000
     );
     camera.position.set(-30, 40, 30);
@@ -38,7 +38,7 @@ function App() {
     const renderer = new THREE.WebGLRenderer();
     const canvas = renderer.domElement
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor("orange", 0.5);
+    renderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0), 0.1);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     container.appendChild(renderer.domElement);
@@ -49,7 +49,7 @@ function App() {
 
     // create the ground plane
     var planeGeometry = new THREE.PlaneGeometry(60, 20);
-    var planeMaterial = new THREE.MeshBasicMaterial({ color: 0xcccccc });
+    var planeMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
     var plane = new THREE.Mesh(planeGeometry, planeMaterial);
 
     // rotate and position the plane
@@ -64,7 +64,7 @@ function App() {
 
     // create a sphere
     var sphereGeometry = new THREE.SphereGeometry(4, 20, 20);
-    var sphereMaterial = new THREE.MeshBasicMaterial({ color: 0x7777ff, wireframe: true });
+    var sphereMaterial = new THREE.MeshLambertMaterial({ color: 0x7777ff });
     var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
 
     // position the sphere
@@ -99,18 +99,21 @@ function App() {
     const orbitControls = new OrbitControls(camera, container)
     orbitControls.autoRotate = true;
 
-    const point_light = new THREE.SpotLight(0xffffff)
-    point_light.position.set(-40, 60, -10)
-    point_light.castShadow = true;
-    point_light.shadow.camera.near = 0.5;
-    point_light.shadow.camera.far = 500;
-    point_light.shadow.mapSize.width = 1024
-    point_light.shadow.mapSize.height = 1024
-    point_light.shadow.camera.left = -10;
-    point_light.shadow.camera.right = 10;
-    point_light.shadow.camera.top = 10;
-    point_light.shadow.camera.bottom = -10;
-    scene.add(point_light)
+
+    const spotLight = new THREE.SpotLight(0xffffff, 6.0);
+    spotLight.position.set(100, 0, 0);
+    spotLight.target.position.set(0, 0, 0)
+
+    spotLight.castShadow = true;
+
+    // spotLight.shadow.mapSize.width = 1024;
+    // spotLight.shadow.mapSize.height = 1024;
+
+    // spotLight.shadow.camera.near = 45;
+    // spotLight.shadow.camera.far = 1000;
+    // spotLight.shadow.camera.fov = 30;
+
+    scene.add(spotLight);
 
 
     // const tween = new TWEEN.Tween(camera.position).to({ x: 202, y: 123, z: 3 }, 3000).onUpdate(()=>{
@@ -119,7 +122,7 @@ function App() {
     const R = 10; //相机圆周运动的半径
 
     const tween = new TWEEN.Tween({ angle: 0, opacity: material.opacity })
-      .to({ angle: Math.PI * 3, opacity: 1.0 }, 160000)
+      .to({ angle: Math.PI * 3, opacity: 1.0 }, 16000)
       .onUpdate(function (obj) {
         camera.position.x = R * Math.cos(obj.angle);
         camera.position.z = R * Math.sin(obj.angle);
@@ -150,7 +153,7 @@ function App() {
       //   camera.updateProjectionMatrix();
       // }
     }
-    // animate()
+    animate()
   };
   return <div id="container"></div>;
 }
